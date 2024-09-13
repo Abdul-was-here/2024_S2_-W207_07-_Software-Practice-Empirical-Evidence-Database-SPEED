@@ -1,0 +1,58 @@
+.container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+  }
+  
+  .login {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logoutButton, .loginButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #0070f3;
+    color: white;
+    font-size: 16px;
+  }
+  
+  .logoutButton:hover, .loginButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .nav li {
+    margin: 0 20px;
+  }
+  
+  .nav a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #0070f3;
+  }
+  
+  .nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .main {
+    margin-top: 20px;
+  }
+  
