@@ -9,19 +9,19 @@ export class UsersController {
   @Post('login')
   async login(@Body() body, @Res() res) {
     const { email, password } = body;
-    const user = await this.usersService.validateUser(email, password);
+    const token = await this.usersService.login(email, password);
 
-    if (!user) {
+    if (!token) {
       return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Invalid credentials' });
     }
 
-    // 生成 JWT 令牌，包含用户角色信息
-    const token = jwt.sign({ email: user.email, role: user.role }, 'secret_key', { expiresIn: '1h' });
+    // 成功登录后返回 JWT 令牌
     return res.status(HttpStatus.OK).json({ token });
   }
 
   @Post('profile')
-  async getProfile(@Body() token: string, @Res() res) {
+  async getProfile(@Body() body, @Res() res) {
+    const { token } = body;
     try {
       const decoded = jwt.verify(token, 'secret_key');
       return res.status(HttpStatus.OK).json(decoded);

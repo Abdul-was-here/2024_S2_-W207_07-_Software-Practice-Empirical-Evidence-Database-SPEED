@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './css/Search.module.css'; 
+import Layout from '../components/Layout';
 
 export default function Search() {
   const [query, setQuery] = useState('');
@@ -17,6 +18,7 @@ export default function Search() {
   };
 
   return (
+    <Layout>
     <div className={styles.container}>
       <h1>Search Articles</h1>
       <form onSubmit={handleSearch} className={styles.form}>
@@ -43,5 +45,6 @@ export default function Search() {
         )}
       </ul>
     </div>
+    </Layout>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './css/Submit.module.css'; 
+import Layout from '../components/Layout';
 
 export default function Submit() {
   const [article, setArticle] = useState({
@@ -51,6 +52,7 @@ export default function Submit() {
   };
 
   return (
+    <Layout>
     <div className={styles.container}>
       <h1>Submit an Article</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -117,5 +119,6 @@ export default function Submit() {
         <button type="submit" className={styles.button}>Submit</button>
       </form>
     </div>
+    </Layout>
   );
 }

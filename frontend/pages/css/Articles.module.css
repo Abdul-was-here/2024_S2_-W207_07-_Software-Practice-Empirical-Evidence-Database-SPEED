@@ -1,63 +1,32 @@
 .container {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .articleList {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap; /* 允许内容换行 */
-    justify-content: center; /* 水平居中排列 */
-    gap: 20px; /* 每个卡片之间的间距 */
-  }
-  
-  .articleItem {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 10px;
-    width: 300px; /* 卡片的宽度 */
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .articleItem:hover {
-    transform: translateY(-5px);
-  }
-  
-  .articleItem h2 {
-    margin: 0;
-    font-size: 1.5em;
-    color: #333;
-  }
-  
-  .articleItem p {
-    margin: 8px 0;
-    font-size: 1em;
-    color: #555;
-  }
-  
-  .articleItem a {
-    color: #1a73e8;
-    text-decoration: none;
-  }
-  
-  .articleItem a:hover {
-    text-decoration: underline;
-  }
-  
-  .titleBox {
-    padding: 10px;
-    border: 2px solid #007bff; /* 蓝色边框 */
-    border-radius: 8px;
-    background-color: #f0f8ff; /* 浅蓝色背景 */
-    margin-bottom: 10px;
-  }
-  
-  .summaryText {
-    font-size: 0.9em; /* 调整Summary字体大小 */
-  }
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.articleTable {
+  width: 100%;
+  border-collapse: collapse; /* 使表格边框不重叠 */
+  margin-top: 20px;
+}
+
+.articleTable th, .articleTable td {
+  border: 1px solid #ddd; /* 边框样式 */
+  padding: 10px;
+  text-align: left;
+}
+
+.articleTable th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.articleTable td a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.articleTable td a:hover {
+  text-decoration: underline;
+}
