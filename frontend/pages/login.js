@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styles from './css/Login.module.css'; 
 import Layout from '../components/Layout';
 
@@ -8,16 +9,15 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  // 手动解析 JWT
-  const decodeToken = (token) => {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-  };
+  // 如果用户已登录，重定向到首页
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.replace('/');  // 避免登录用户访问登录页
+    }
+  }, [router]);
 
+  // 登录处理函数
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -30,17 +30,15 @@ export default function Login() {
       if (!res.ok) {
         const errorData = await res.json();
         console.log('Login failed:', errorData.message);
-        alert('Login failed');
+        alert('Login failed: ' + errorData.message);
         return;
       }
 
       const data = await res.json();
       localStorage.setItem('token', data.token);
 
-      // 手动解析 JWT，获取用户角色
+      // 手动解析 JWT
       const decodedToken = decodeToken(data.token);
-      console.log('Decoded token:', decodedToken);
-
       const userRole = decodedToken.role;
 
       // 根据用户角色重定向到不同的页面
@@ -57,9 +55,26 @@ export default function Login() {
     }
   };
 
+  // 手动解析 JWT 的方法
+  const decodeToken = (token) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  };
+
   return (
-    <Layout>
+    <Layout hideMenu={true}>
       <div className={styles.container}>
+        {/* 添加标题 */}
+        <h1 className={styles.title}>Welcome to SPEED Login</h1>
         <form onSubmit={handleLogin} className={styles.form}>
           <input
             type="email"
@@ -79,6 +94,11 @@ export default function Login() {
           />
           <button type="submit" className={styles.button}>Login</button>
         </form>
+
+        <p className={styles.text}>
+          Don't have an account? 
+          <Link href="/register" className={styles.link}>Register here</Link>
+        </p>
       </div>
     </Layout>
   );

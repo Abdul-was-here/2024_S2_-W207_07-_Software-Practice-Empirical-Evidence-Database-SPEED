@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nestjs/passport": "^10.0.3",
     "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "mongoose": "^8.6.1",
     "next": "^14.2.13",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "react": "^18",
     "react-dom": "^18"
   },

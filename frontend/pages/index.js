@@ -1,9 +1,12 @@
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import styles from './css/Home.module.css'; 
-import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [userRole, setUserRole] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -11,15 +14,28 @@ export default function Home() {
       fetch('/api/users/me', {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then((res) => res.json())
-        .then((data) => setUserRole(data.role));
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            // 如果 token 失效，移除 token 并跳转到登录页面
+            localStorage.removeItem('token');
+            router.push('/login');
+          }
+        })
+        .then((data) => {
+          if (data && data.role) {
+            setUserRole(data.role); // 只有在 role 存在时才更新状态
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+          router.push('/login');
+        });
+    } else {
+      router.push('/login'); // 如果没有 token，跳转到登录页面
     }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setUserRole(null);
-  };
+  }, [router]);
 
   return (
     <Layout>
@@ -29,7 +45,6 @@ export default function Home() {
           {userRole && (
             <div className={styles.login}>
               <span>{userRole}</span>
-              <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
             </div>
           )}
         </header>
@@ -37,10 +52,9 @@ export default function Home() {
         <main className={styles.main}>
           {userRole === 'Moderator' && <Link href="/moderation">Moderation Queue</Link>}
           {userRole === 'Analyst' && <Link href="/analysis">Analysis Queue</Link>}
-          {!userRole && <p>Welcome! Explore the available articles or submit your own.</p>}
+          {!userRole && <p>Loading...</p>}
         </main>
       </div>
     </Layout>
   );
 }
-

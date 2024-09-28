@@ -32,3 +32,11 @@
 .button:hover {
   background-color: #005bb5;
 }
+
+.title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: left;  /* 确保标题对齐到左边 */
+  font-weight: bold;
+}

@@ -32,6 +32,9 @@ export class Article extends Document {
 
   @Prop()
   analysisResult: string;  // 确保这里有 analysisResult 字段
+
+  @Prop({ required: true })  // 添加提交者字段，用于存储提交者的 email
+  submitter: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

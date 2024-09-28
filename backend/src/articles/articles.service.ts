@@ -10,29 +10,29 @@ export class ArticlesService {
     @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
 
-  // 提交文章并设置状态为 `pending_moderation`
-  async submitArticle(createArticleDto: CreateArticleDto): Promise<Article> {
+  // 提交文章并保存提交者信息
+  async submitArticle(createArticleDto: CreateArticleDto, submitterEmail: string): Promise<Article> {
     const createdArticle = new this.articleModel({
       ...createArticleDto,
       updated_date: new Date(),
       status: 'pending_moderation',  // 初始状态为待审核
+      submitter: submitterEmail,  // 保存提交者的 email
     });
     return createdArticle.save();
   }
-
 
   // 获取所有文章
   async findAll(): Promise<Article[]> {
     return this.articleModel.find().exec();
   }
 
-   // 获取待审核的文章
-   async getModerationQueue(): Promise<Article[]> {
+  // 获取待审核的文章
+  async getModerationQueue(): Promise<Article[]> {
     return this.articleModel.find({ status: 'pending_moderation' }).exec();
   }
 
   async searchArticles(query: string): Promise<Article[]> {
-    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec();  // 使用正则表达式进行标题搜索
+    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec();  
   }
 
   // 审核文章 (通过则进入 `pending_analysis` 状态)
