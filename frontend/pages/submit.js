@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'; // Import necessary React hooks
-import { useRouter } from 'next/router'; // Import useRouter for navigation
-import styles from './css/Submit.module.css'; // Import CSS module for styling
-import Layout from '../components/Layout'; // Import the Layout component for consistent page structure
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import styles from './css/Submit.module.css'; 
+import Layout from '../components/Layout';
 
 export default function Submit() {
-  const [article, setArticle] = useState({ // State to store article submission data
+  const [article, setArticle] = useState({
     title: '',
     isbn: '',
     author: '',
@@ -14,42 +14,39 @@ export default function Submit() {
     doi: '',
   });
 
-  const router = useRouter(); // Get the router object for navigation
+  const router = useRouter();
 
-  // Check for token and verify if the user is logged in
+  // 获取 token 并验证是否登录
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    const token = localStorage.getItem('token');
     if (!token) {
-      // If no token is found, redirect to the login page
+      // 如果没有 token，跳转到登录页面
       router.push('/login');
     }
-  }, [router]); // Run this effect when the router changes
+  }, [router]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     
-    const token = localStorage.getItem('token'); // Retrieve the token again
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert('You must be logged in to submit an article.'); // Alert user if not logged in
+      alert('You must be logged in to submit an article.');
       return;
     }
 
-    console.log('Submitting Article:', article); // Log the article data to console for debugging
+    console.log('Submitting Article:', article);
 
-    // Send the article data to the API for submission
     const res = await fetch('/api/articles/submit', {
-      method: 'POST', // Use POST method to submit the article
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Specify content type as JSON
-        'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // 发送 token
       },
-      body: JSON.stringify(article), // Convert article data to JSON
+      body: JSON.stringify(article),
     });
   
     if (res.ok) {
-      alert('Article submitted successfully!'); // Alert on successful submission
-      // Reset the article state to clear the form
+      alert('Article submitted successfully!');
       setArticle({
         title: '',
         isbn: '',
@@ -60,87 +57,87 @@ export default function Submit() {
         doi: '',
       });
     } else {
-      alert('Failed to submit article'); // Alert on failure
+      alert('Failed to submit article');
     }
   };
 
-  // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target; // Destructure name and value from the input event
+    const { name, value } = e.target;
     setArticle({
-      ...article, // Spread the existing article data
-      [name]: value, // Update the specific field being changed
+      ...article,
+      [name]: value,
     });
   };
 
   return (
-    <Layout> {/* Wrap content with the Layout component */}
-      <div className={styles.container}> {/* Container for the submission form */}
-        <h1>Submit an Article</h1> {/* Page title */}
-        <form onSubmit={handleSubmit} className={styles.form}> {/* Submission form */}
+    <Layout>
+      <div className={styles.container}>
+        <h1>Submit an Article</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <input
             type="text"
-            name="title" // Name attribute corresponds to the state property
-            value={article.title} // Bind title state to input
-            onChange={handleInputChange} // Handle input changes
-            placeholder="Title" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            name="title"
+            value={article.title}
+            onChange={handleInputChange}
+            placeholder="Title"
+            required
+            className={styles.input}
           />
           <input
             type="text"
-            name="isbn" // Name attribute corresponds to the state property
-            value={article.isbn} // Bind ISBN state to input
-            onChange={handleInputChange} // Handle input changes
-            placeholder="ISBN" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            name="isbn"
+            value={article.isbn}
+            onChange={handleInputChange}
+            placeholder="ISBN"
+            required
+            className={styles.input}
           />
           <input
             type="text"
-            name="author" // Name attribute corresponds to the state property
-            value={article.author} // Bind author state to input
-            onChange={handleInputChange} // Handle input changes
-            placeholder="Author" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            name="author"
+            value={article.author}
+            onChange={handleInputChange}
+            placeholder="Author"
+            required
+            className={styles.input}
           />
           <textarea
-            name="description" // Name attribute corresponds to the state property
-            value={article.description} // Bind description state to textarea
-            onChange={handleInputChange} // Handle input changes
-            placeholder="Description" // Placeholder text
-            required // Input is required
-            className={styles.textarea} // CSS class for styling
+            name="description"
+            value={article.description}
+            onChange={handleInputChange}
+            placeholder="Description"
+            required
+            className={styles.textarea}
           />
           <input
             type="date"
-            name="published_date" // Name attribute corresponds to the state property
-            value={article.published_date} // Bind published date state to input
-            onChange={handleInputChange} // Handle input changes
-            className={styles.input} // CSS class for styling
+            name="published_date"
+            value={article.published_date}
+            onChange={handleInputChange}
+            className={styles.input}
           />
           <input
             type="text"
-            name="publisher" // Name attribute corresponds to the state property
-            value={article.publisher} // Bind publisher state to input
-            onChange={handleInputChange} // Handle input changes
-            placeholder="Publisher" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            name="publisher"
+            value={article.publisher}
+            onChange={handleInputChange}
+            placeholder="Publisher"
+            required
+            className={styles.input}
           />
           <input
             type="text"
-            name="doi" // Name attribute corresponds to the state property
-            value={article.doi} // Bind DOI state to input
-            onChange={handleInputChange} // Handle input changes
-            placeholder="DOI" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            name="doi"
+            value={article.doi}
+            onChange={handleInputChange}
+            placeholder="DOI"
+            required
+            className={styles.input}
           />
-          <button type="submit" className={styles.button}>Submit</button> {/* Submit button */}
+          <button type="submit" className={styles.button}>Submit</button>
         </form>
       </div>
     </Layout>
   );
 }
+

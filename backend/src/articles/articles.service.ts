@@ -1,64 +1,63 @@
-import { Injectable } from '@nestjs/common'; // Import the Injectable decorator
-import { InjectModel } from '@nestjs/mongoose'; // Import InjectModel for dependency injection
-import { Model } from 'mongoose'; // Import Model from Mongoose
-import { Article } from './schemas/article.schema'; // Import the Article schema
-import { CreateArticleDto } from './dto/create-article.dto'; // Import DTO for article creation
-import { isValidObjectId } from 'mongoose'; // Import to validate MongoDB Object IDs
-import { HttpException, HttpStatus } from '@nestjs/common'; // Import HttpException and HttpStatus for error handling
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Article } from './schemas/article.schema';
+import { CreateArticleDto } from './dto/create-article.dto';
+import { isValidObjectId } from 'mongoose';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-@Injectable() // Mark the class as a provider
+@Injectable()
 export class ArticlesService {
   constructor(
-    @InjectModel(Article.name) private articleModel: Model<Article>, // Inject the Article model
+    @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
 
-  // Submit an article and save submitter information
+  // 提交文章并保存提交者信息
   async submitArticle(createArticleDto: CreateArticleDto, submitterEmail: string): Promise<Article> {
     const createdArticle = new this.articleModel({
-      ...createArticleDto, // Spread operator to include properties from the DTO
-      updated_date: new Date(), // Set the current date as updated date
-      status: 'pending_moderation',  // Initial status is set to pending moderation
-      submitter: submitterEmail,  // Save the submitter's email
+      ...createArticleDto,
+      updated_date: new Date(),
+      status: 'pending_moderation',  // 初始状态为待审核
+      submitter: submitterEmail,  // 保存提交者的 email
     });
-    return createdArticle.save(); // Save the article to the database
+    return createdArticle.save();
   }
 
-  // Get all articles
+  // 获取所有文章
   async findAll(): Promise<Article[]> {
-    return this.articleModel.find().exec(); // Retrieve all articles from the database
+    return this.articleModel.find().exec();
   }
 
-  // Get articles pending moderation
+  // 获取待审核的文章
   async getModerationQueue(): Promise<Article[]> {
-    return this.articleModel.find({ status: 'pending_moderation' }).exec(); // Retrieve articles that are pending moderation
+    return this.articleModel.find({ status: 'pending_moderation' }).exec();
   }
 
-  // Search articles by title
   async searchArticles(query: string): Promise<Article[]> {
-    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec(); // Search for articles matching the title
+    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec();
   }
 
-  // Handle moderation (approve or reject an article)
+  // 审核文章 (通过则进入 `pending_analysis` 状态)
   async handleModeration(id: string, action: string): Promise<Article> {
-    const article = await this.articleModel.findById(id).exec(); // Find the article by ID
+    const article = await this.articleModel.findById(id).exec();
     if (action === 'approve') {
-      article.status = 'pending_analysis'; // Set status to pending analysis if approved
+      article.status = 'pending_analysis';
     } else if (action === 'reject') {
-      article.status = 'rejected'; // Set status to rejected if not approved
+      article.status = 'rejected';
     }
-    return article.save(); // Save the updated article
+    return article.save();
   }
 
-  // Get articles pending analysis
+  // 获取待分析的文章
   async getAnalysisQueue(): Promise<Article[]> {
-    return this.articleModel.find({ status: 'pending_analysis' }).exec(); // Retrieve articles that are pending analysis
+    return this.articleModel.find({ status: 'pending_analysis' }).exec();
   }
 
-  // Analyze an article and save the result to the database, setting status to approved
+  // 分析文章并存入数据库，状态设置为 `approved`
   async submitAnalysis(id: string, analysisResult: string): Promise<Article> {
-    const article = await this.articleModel.findById(id).exec(); // Find the article by ID
-    article.status = 'approved'; // Set status to approved
-    article.analysisResult = analysisResult; // Save the analysis result
-    return article.save(); // Save the updated article
+    const article = await this.articleModel.findById(id).exec();
+    article.status = 'approved';
+    article.analysisResult = analysisResult;
+    return article.save();
   }
 }

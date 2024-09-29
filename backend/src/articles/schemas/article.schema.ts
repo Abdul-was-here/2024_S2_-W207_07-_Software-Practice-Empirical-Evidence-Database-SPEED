@@ -27,13 +27,13 @@ export class Article extends Document {
   @Prop({ required: true })  
   doi: string;
 
-  @Prop({ default: 'pending_moderation' })  
+  @Prop({ default: 'pending_moderation' })  // 状态字段，默认值
   status: string;
 
   @Prop()
-  analysisResult: string;  
+  analysisResult: string;  // 确保这里有 analysisResult 字段
 
-  @Prop({ required: true })  
+  @Prop({ required: true })  // 添加提交者字段，用于存储提交者的 email
   submitter: string;
 }
 

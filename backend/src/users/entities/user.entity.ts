@@ -1,19 +1,15 @@
-import { Schema, Document } from 'mongoose'; // Import necessary modules from Mongoose
+import { Schema, Document } from 'mongoose';
 
-// Define IUser interface using Mongoose's Document interface
+// 使用 Mongoose 的 Document 接口定义 IUser
 export interface IUser extends Document {
-  email: string; // User's email address
-  password: string; // User's hashed password
-  role: string; // User's role (Submitter, Moderator, Analyst)
+  email: string;
+  password: string;
+  role: string;
 }
 
-// Define Mongoose user model schema
+// 定义 Mongoose 用户模型
 export const UserSchema = new Schema({
-  email: { type: String, required: true, unique: true }, // Email field must be unique and is required
-  password: { type: String, required: true }, // Password field is required
-  role: { 
-    type: String, // Role field can be one of the predefined roles
-    enum: ['Submitter', 'Moderator', 'Analyst'], // Allowed values for role
-    default: 'Submitter' // Default role assigned to new users
-  },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['Submitter', 'Moderator', 'Analyst'], default: 'Submitter' },
 });

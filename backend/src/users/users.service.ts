@@ -5,48 +5,49 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { IUser } from './entities/user.entity';
 
-@Injectable() // Mark the class as a provider
+@Injectable()
 export class UsersService {
   constructor(
-    @InjectModel('User') private userModel: Model<IUser>, // Inject the User model
+    @InjectModel('User') private userModel: Model<IUser>,
   ) {}
 
-  // Validate if user exists and password is correct
+  // 验证用户是否存在并密码正确
   async validateUser(email: string, password: string) {
-    const user = await this.userModel.findOne({ email }).exec(); // Find user by email
-    if (user && await bcrypt.compare(password, user.password)) { // Check if user exists and password matches
-      return user; // Return the user if validation is successful
+    const user = await this.userModel.findOne({ email }).exec();
+    if (user && await bcrypt.compare(password, user.password)) {
+      return user;
     }
-    return null; // Return null if validation fails
+    return null;
   }
 
-  // Login user and generate JWT
+  // 登录用户并生成 JWT
   async login(email: string, password: string): Promise<string | null> {
-    const user = await this.validateUser(email, password); // Validate user credentials
+    const user = await this.validateUser(email, password);
     if (user) {
       const token = jwt.sign(
-        { email: user.email, role: user.role }, // Payload for the token
-        process.env.JWT_SECRET, // Use environment variable for secret
-        { expiresIn: '1h' } // Set token expiration time
+        { email: user.email, role: user.role },
+        process.env.JWT_SECRET, // 使用环境变量存储密钥
+        { expiresIn: '1h' }
       );
-      return token; // Return the generated token
+      return token;
     }
-    return null; // Return null if credentials are invalid
+    return null;
   }
 
-  // Register new user
+  // 注册新用户
   async register(email: string, password: string, role: string): Promise<any> {
-    const existingUser = await this.userModel.findOne({ email }).exec(); // Check if the user already exists
+    const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
-      return null; // Return null if user exists
+      return null; // 如果用户已经存在，返回 null
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-    const newUser = new this.userModel({ // Create a new user instance
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new this.userModel({
       email,
       password: hashedPassword,
       role,
     });
-    return newUser.save(); // Save the new user to the database
+    return newUser.save();
   }
 }
+

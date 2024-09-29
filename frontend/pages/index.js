@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link'; // Import Link for navigation
-import Layout from '../components/Layout'; // Import your Layout component
-import styles from './css/Home.module.css'; // Import styles for your component
+import Layout from '../components/Layout';
+import styles from './css/Home.module.css'; 
 
 export default function Home() {
-  const [userRole, setUserRole] = useState(null); // State to hold user role
-  const [articles, setArticles] = useState([]); // State to hold articles
+  const [userRole, setUserRole] = useState(null);
+  const [articles, setArticles] = useState([]); // 初始化为空数组
+  const [bookmarks, setBookmarks] = useState([]); // 存储书签列表
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Get token from local storage
+    const token = localStorage.getItem('token');
     if (token) {
       fetch('/api/users/me', {
         headers: { Authorization: `Bearer ${token}` },
@@ -20,48 +20,48 @@ export default function Home() {
             return res.json();
           } else {
             localStorage.removeItem('token');
-            router.push('/login'); // Redirect to login if token is invalid
+            router.push('/login');
           }
         })
         .then((data) => {
           if (data && data.role) {
-            setUserRole(data.role); // Set user role based on fetched data
+            setUserRole(data.role);
             if (data.role === 'Submitter') {
-              // Fetch articles if user role is Submitter
+              // 获取所有文章
               fetch('/api/articles')
                 .then((res) => res.json())
                 .then((articleData) => {
-                  setArticles(Array.isArray(articleData) ? articleData : []); // Ensure articleData is an array
+                  setArticles(Array.isArray(articleData) ? articleData : []); // 确保文章是数组
                 })
-                .catch(() => setArticles([])); // Set articles to empty array on error
+                .catch(() => setArticles([])); // 在发生错误时，设置为空数组
             }
           }
         })
         .catch(() => {
           localStorage.removeItem('token');
-          router.push('/login'); // Redirect to login on fetch error
+          router.push('/login');
         });
     } else {
-      router.push('/login'); // Redirect to login if no token is found
+      router.push('/login');
     }
   }, [router]);
 
-  // Function to bookmark an article
   const bookmarkArticle = (article) => {
     const storedBookmarks = localStorage.getItem('bookmarks');
     const bookmarksArray = storedBookmarks ? JSON.parse(storedBookmarks) : [];
+
     const isAlreadyBookmarked = bookmarksArray.some((bookmark) => bookmark._id === article._id);
 
     if (!isAlreadyBookmarked) {
       const newBookmarks = [...bookmarksArray, article];
+      setBookmarks(newBookmarks);
       localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
-      alert('Article bookmarked!'); // Notify user
+      alert('Article bookmarked!');
     } else {
-      alert('This article is already bookmarked.'); // Notify user
+      alert('This article is already bookmarked.');
     }
   };
 
-  // Function to export an article
   const exportArticle = (article) => {
     const articleData = `
       Title: ${article.title}
@@ -74,10 +74,10 @@ export default function Home() {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${article.title}.txt`; // Set filename
+    link.download = `${article.title}.txt`;
     document.body.appendChild(link);
-    link.click(); // Trigger download
-    document.body.removeChild(link); // Clean up
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -87,7 +87,7 @@ export default function Home() {
           <h1>Welcome to SPEED</h1>
           {userRole && (
             <div className={styles.login}>
-              <span>{userRole}</span> {/* Display user role */}
+              <span>{userRole}</span>
             </div>
           )}
         </header>
@@ -133,13 +133,14 @@ export default function Home() {
           )}
           {!userRole && <p>Loading...</p>}
 
-          {/* Add bookmarks page link */}
-          <Link href="/bookmarks">
-            View Bookmarks
-          </Link>
+          {/* 添加书签页面链接 */}
+          <div className={styles.bookmarksLink}>
+            <a href="/bookmarks">
+              View Bookmarks
+            </a>
+          </div>
         </main>
       </div>
     </Layout>
   );
 }
-

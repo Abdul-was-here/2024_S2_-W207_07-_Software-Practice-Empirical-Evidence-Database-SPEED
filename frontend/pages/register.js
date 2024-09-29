@@ -1,76 +1,74 @@
-import { useState } from 'react'; // Import React's useState hook for state management
-import { useRouter } from 'next/router'; // Import useRouter for navigation
-import styles from './css/Register.module.css'; // Import CSS module for styling
-import Layout from '../components/Layout'; // Import the Layout component for consistent page structure
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import styles from './css/Register.module.css';
+import Layout from '../components/Layout';
 
 export default function Register() {
-  const [email, setEmail] = useState(''); // State for storing email input
-  const [password, setPassword] = useState(''); // State for storing password input
-  const [role, setRole] = useState('Submitter'); // State for storing user role, default is "Submitter"
-  const router = useRouter(); // Get the router object for navigation
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('Submitter');
+  const router = useRouter();
 
-  // Handle registration form submission
+  // 处理注册表单提交
   const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     try {
-      // Send POST request to register the user
       const res = await fetch('/api/users/register', {
-        method: 'POST', // Use POST method for registration
-        headers: { 'Content-Type': 'application/json' }, // Set content type to JSON
-        body: JSON.stringify({ // Convert form data to JSON
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           email,
           password,
           role,
         }),
       });
 
-      // Check if the response is not okay
       if (!res.ok) {
-        const errorData = await res.json(); // Parse error response
-        console.log('Registration failed:', errorData.message); // Log error message
-        alert('Registration failed, username has been used'); // Alert user about the failure
+        const errorData = await res.json();
+        console.log('Registration failed:', errorData.message);
+        alert('Registration failed, username has used');
         return;
       }
 
-      alert('Registration successful! You can now log in.'); // Alert user on successful registration
-      router.push('/login'); // Redirect to login page after successful registration
+      alert('Registration successful! You can now log in.');
+      router.push('/login'); // 注册成功后跳转到登录页面
     } catch (error) {
-      console.error('Error during registration:', error); // Log any errors
-      alert('An error occurred during registration'); // Alert user about the error
+      console.error('Error during registration:', error);
+      alert('An error occurred during registration');
     }
   };
 
   return (
-    <Layout> {/* Wrap content with the Layout component */}
-      <div className={styles.container}> {/* Container for registration form */}
-        <h1>Register</h1> {/* Page title */}
-        <form onSubmit={handleRegister} className={styles.form}> {/* Registration form */}
+    <Layout>
+      <div className={styles.container}>
+        <h1>Register</h1>
+        <form onSubmit={handleRegister} className={styles.form}>
           <input
-            type="email" // Input for email
-            value={email} // Bind email state to input
-            onChange={(e) => setEmail(e.target.value)} // Update email state on input change
-            placeholder="Email" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+            className={styles.input}
           />
           <input
-            type="password" // Input for password
-            value={password} // Bind password state to input
-            onChange={(e) => setPassword(e.target.value)} // Update password state on input change
-            placeholder="Password" // Placeholder text
-            required // Input is required
-            className={styles.input} // CSS class for styling
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+            className={styles.input}
           />
           <select
-            value={role} // Bind role state to select
-            onChange={(e) => setRole(e.target.value)} // Update role state on selection change
-            className={styles.input} // CSS class for styling
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className={styles.input}
           >
-            <option value="Submitter">Submitter</option> // Role option
-            <option value="Moderator">Moderator</option> // Role option
-            <option value="Analyst">Analyst</option> // Role option
+            <option value="Submitter">Submitter</option>
+            <option value="Moderator">Moderator</option>
+            <option value="Analyst">Analyst</option>
           </select>
-          <button type="submit" className={styles.button}>Register</button> {/* Submit button */}
+          <button type="submit" className={styles.button}>Register</button>
         </form>
       </div>
     </Layout>
