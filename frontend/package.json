@@ -31,12 +31,12 @@
     "postcss": "^8",
     "react-scripts": "^5.0.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "5.6.2"
+    "typescript": "^4.9.5"
   },
-"jest": {
-  "clearMocks": true,
-  "transform": {
-    "^.+\\.jsx?$": "babel-jest"
+  "jest": {
+    "clearMocks": true,
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   }
-}
 }
