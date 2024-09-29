@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }) {
     }
   }, [router]);
 
-  return <Component {...pageProps} />; // No Layout here
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;

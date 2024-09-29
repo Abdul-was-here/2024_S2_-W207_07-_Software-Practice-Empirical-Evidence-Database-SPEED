@@ -1,76 +1,75 @@
-import { Controller, Post, Get, Put, Body, Param, Query, Req } from '@nestjs/common';
-import { ArticlesService } from './articles.service';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { Request } from 'express';
-import * as jwt from 'jsonwebtoken';
+import { Controller, Post, Get, Put, Body, Param, Query, Req } from '@nestjs/common'; // Import necessary decorators and modules
+import { ArticlesService } from './articles.service'; // Import ArticlesService for handling article logic
+import { CreateArticleDto } from './dto/create-article.dto'; // Import DTO for creating articles
+import { HttpException, HttpStatus } from '@nestjs/common'; // Import HttpException and HttpStatus for error handling
+import { Request } from 'express'; // Import Request type from Express
+import * as jwt from 'jsonwebtoken'; // Import jsonwebtoken for decoding JWT
 
-@Controller('articles')
+@Controller('articles') // Define the base route for this controller
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(private readonly articlesService: ArticlesService) {} // Inject ArticlesService
 
-  @Post('submit')
+  // Submit an article
+  @Post('submit') // Define the route for submitting an article
   async submitArticle(@Body() createArticleDto: CreateArticleDto, @Req() req: Request) {
     try {
-      // 从 Authorization 头部获取 JWT token
+      // Get JWT token from Authorization header
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
-        throw new HttpException('Token missing', HttpStatus.UNAUTHORIZED);
+        throw new HttpException('Token missing', HttpStatus.UNAUTHORIZED); // Throw an exception if token is missing
       }
 
-      // 解码 JWT token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const submitterEmail = decoded.email; // 获取提交者的 email
+      // Decode JWT token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token using the secret
+      const submitterEmail = decoded.email; // Get the submitter's email from the decoded token
 
-      // 将 submitter 信息传递给服务层
+      // Pass submitter information to the service layer
       return await this.articlesService.submitArticle(createArticleDto, submitterEmail);
     } catch (error) {
       console.error('Error while submitting article:', error);  
-      throw new HttpException('Failed to submit article', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Failed to submit article', HttpStatus.INTERNAL_SERVER_ERROR); // Handle errors
     }
   }
   
-  // 获取所有文章
-  @Get()
+  // Get all articles
+  @Get() // Define the route for getting all articles
   async getAllArticles() {
-    return await this.articlesService.findAll();  
+    return await this.articlesService.findAll(); // Retrieve all articles using the service
   }
 
-  @Get('search')
+  // Search articles by query
+  @Get('search') // Define the route for searching articles
   async searchArticles(@Query('q') query: string) {
-    return await this.articlesService.searchArticles(query);  
+    return await this.articlesService.searchArticles(query); // Search articles based on the query parameter
   }
 
-  // 获取待审核的文章
-  @Get('moderation')
+  // Get articles pending moderation
+  @Get('moderation') // Define the route for getting articles pending moderation
   async getModerationQueue() {
-    return await this.articlesService.getModerationQueue();
+    return await this.articlesService.getModerationQueue(); // Retrieve articles pending moderation
   }
 
-  // 审核文章
-  @Put('moderation/:id')
+  // Handle moderation of an article
+  @Put('moderation/:id') // Define the route for moderating an article by ID
   async handleModeration(
-    @Param('id') id: string,
-    @Body() body: { action: string },
+    @Param('id') id: string, // Get the article ID from the route parameter
+    @Body() body: { action: string }, // Get the action (approve/reject) from the request body
   ) {
-    return await this.articlesService.handleModeration(id, body.action);
+    return await this.articlesService.handleModeration(id, body.action); // Pass the moderation action to the service
   }
 
-  // 获取待分析的文章
-  @Get('analysis')
+  // Get articles pending analysis
+  @Get('analysis') // Define the route for getting articles pending analysis
   async getAnalysisQueue() {
-    return await this.articlesService.getAnalysisQueue();
+    return await this.articlesService.getAnalysisQueue(); // Retrieve articles pending analysis
   }
 
-  // 分析文章并存入数据库
-  @Put('analysis/:id')
+  // Analyze an article and save the result to the database
+  @Put('analysis/:id') // Define the route for submitting analysis of an article by ID
   async submitAnalysis(
-    @Param('id') id: string,
-    @Body() body: { analysisResult: string },
+    @Param('id') id: string, // Get the article ID from the route parameter
+    @Body() body: { analysisResult: string }, // Get the analysis result from the request body
   ) {
-    return await this.articlesService.submitAnalysis(id, body.analysisResult);
+    return await this.articlesService.submitAnalysis(id, body.analysisResult); // Pass the analysis result to the service
   }
-
-
-  
 }

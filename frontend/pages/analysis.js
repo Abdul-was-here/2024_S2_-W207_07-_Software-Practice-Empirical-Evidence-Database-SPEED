@@ -1,48 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../components/Layout';
+import React, { useState, useEffect } from 'react'; // Import necessary React hooks
+import Layout from '../components/Layout'; // Import the Layout component for consistent page structure
 
 export default function AnalysisQueue() {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState([]); // State to store articles awaiting analysis
 
   useEffect(() => {
-    fetch('/api/articles/analysis')  // 确保请求正确的 API 路径
-      .then(res => res.json())
-      .then(data => setArticles(data));
-  }, []);
+    // Fetch articles from the API when the component mounts
+    fetch('/api/articles/analysis')  // Ensure the API path is correct
+      .then(res => res.json()) // Convert the response to JSON
+      .then(data => setArticles(data)); // Update state with the fetched articles
+  }, []); // Empty dependency array means this runs once when the component mounts
 
-  // 提交分析结果
+  // Submit analysis result for a specific article
   const handleSubmitAnalysis = async (id, result) => {
     const res = await fetch(`/api/articles/analysis/${id}`, {
-      method: 'PUT',
+      method: 'PUT', // Use PUT method to update the analysis result
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', // Specify content type as JSON
       },
-      body: JSON.stringify({ analysisResult: result }), // 使用 "approved" 或 "rejected" 作为分析结果
+      body: JSON.stringify({ analysisResult: result }), // Use "approved" or "rejected" as analysis result
     });
 
     if (res.ok) {
-      // 如果提交成功，则从列表中移除该文章
-      setArticles(articles.filter(article => article._id !== id));
+      // If submission is successful, remove the article from the list
+      setArticles(articles.filter(article => article._id !== id)); // Update the articles state
     } else {
-      alert('Failed to submit analysis');
+      alert('Failed to submit analysis'); // Alert user on failure
     }
   };
 
   return (
-    <Layout>
+    <Layout> {/* Wrap content with the Layout component */}
       <div>
-        <h1>Analysis Queue</h1>
+        <h1>Analysis Queue</h1> {/* Page title */}
         <ul>
           {articles.map(article => (
-            <li key={article._id}>
-              <h2>{article.title}</h2>
-              <p>{article.description}</p>
+            <li key={article._id}> {/* Unique key for each list item */}
+              <h2>{article.title}</h2> {/* Article title */}
+              <p>{article.description}</p> {/* Article description */}
 
+              {/* Buttons to approve or reject the article */}
               <button onClick={() => handleSubmitAnalysis(article._id, 'approved')}>
-              Approve
+                Approve
               </button>
               <button onClick={() => handleSubmitAnalysis(article._id, 'rejected')}>
-              Reject
+                Reject
               </button>
             </li>
           ))}

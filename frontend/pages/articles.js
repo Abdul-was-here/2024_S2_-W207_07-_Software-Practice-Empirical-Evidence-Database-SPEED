@@ -1,45 +1,49 @@
-import { useEffect, useState } from 'react';
-import styles from './css/Articles.module.css';
-import Layout from '../components/Layout';
+import { useEffect, useState } from 'react'; // Import React hooks for state and lifecycle management
+import styles from './css/Articles.module.css'; // Import CSS module for styling
+import Layout from '../components/Layout'; // Import the Layout component for consistent page structure
 
 export default function Articles() {
-  const [articles, setArticles] = useState([]);
-  const [sortOption, setSortOption] = useState('author'); // 默认按 author 排序
+  const [articles, setArticles] = useState([]); // State to store articles
+  const [sortOption, setSortOption] = useState('author'); // Default sorting by author
 
   useEffect(() => {
+    // Fetch articles from the API when the component mounts
     fetch('/api/articles')
-      .then(res => res.json())
-      .then(data => setArticles(data));
-  }, []);
+      .then(res => res.json()) // Convert the response to JSON
+      .then(data => setArticles(data)); // Update state with the fetched articles
+  }, []); // Empty dependency array means this runs once when the component mounts
 
+  // Format the date to a more readable format
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }; // Specify date format options
+    return new Date(dateString).toLocaleDateString(undefined, options); // Convert date to local format
   };
 
+  // Sort articles based on the selected option
   const sortArticles = (articles, option) => {
     return articles.sort((a, b) => {
       if (option === 'author') {
-        return a.author.localeCompare(b.author);
+        return a.author.localeCompare(b.author); // Sort by author name
       } else if (option === 'updated_date') {
-        return new Date(b.updated_date) - new Date(a.updated_date); // 倒序排序
+        return new Date(b.updated_date) - new Date(a.updated_date); // Sort by updated date in descending order
       } else if (option === 'published_date') {
-        return new Date(b.published_date) - new Date(a.published_date); // 倒序排序
+        return new Date(b.published_date) - new Date(a.published_date); // Sort by published date in descending order
       }
-      return 0;
+      return 0; // No sorting if option doesn't match
     });
   };
 
+  // Handle the change in sorting option
   const handleSortChange = (e) => {
-    setSortOption(e.target.value);
+    setSortOption(e.target.value); // Update the sorting option based on user selection
   };
 
   return (
-    <Layout>
-      <div className={styles.container}>
-        <h1>All Articles</h1>
+    <Layout> {/* Wrap content with the Layout component */}
+      <div className={styles.container}> {/* Container for articles */}
+        <h1>All Articles</h1> {/* Page title */}
 
-        {/* 排序选项 */}
+        {/* Sorting options */}
         <div className={styles.sortOptions}>
           <label htmlFor="sort">Sort by: </label>
           <select id="sort" value={sortOption} onChange={handleSortChange}>
@@ -49,8 +53,8 @@ export default function Articles() {
           </select>
         </div>
 
-        {articles.length > 0 ? (
-          <table className={styles.articleTable}>
+        {articles.length > 0 ? ( // Check if there are articles to display
+          <table className={styles.articleTable}> {/* Table to display articles */}
             <thead>
               <tr>
                 <th>Title</th>
@@ -62,20 +66,20 @@ export default function Articles() {
               </tr>
             </thead>
             <tbody>
-              {sortArticles(articles, sortOption).map(article => (
-                <tr key={article._id}>
-                  <td>{article.title}</td>
-                  <td>{article.description ? article.description : 'No description available'}</td>
-                  <td>{article.author ? article.author : 'No author available'}</td>
-                  <td>{article.published_date ? formatDate(article.published_date) : 'No published date available'}</td>
-                  <td>{article.doi ? <a href={article.doi} target="_blank" rel="noopener noreferrer">{article.doi}</a> : 'No DOI available'}</td>
-                  <td>{article.updated_date ? formatDate(article.updated_date) : 'No updated date available'}</td>
+              {sortArticles(articles, sortOption).map(article => ( // Map through sorted articles to create table rows
+                <tr key={article._id}> {/* Unique key for each row */}
+                  <td>{article.title}</td> {/* Article title */}
+                  <td>{article.description ? article.description : 'No description available'}</td> {/* Article description */}
+                  <td>{article.author ? article.author : 'No author available'}</td> {/* Article author */}
+                  <td>{article.published_date ? formatDate(article.published_date) : 'No published date available'}</td> {/* Article published date */}
+                  <td>{article.doi ? <a href={article.doi} target="_blank" rel="noopener noreferrer">{article.doi}</a> : 'No DOI available'}</td> {/* Article DOI */}
+                  <td>{article.updated_date ? formatDate(article.updated_date) : 'No updated date available'}</td> {/* Article updated date */}
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <p>No articles available</p>
+          <p>No articles available</p> // Message displayed if there are no articles
         )}
       </div>
     </Layout>

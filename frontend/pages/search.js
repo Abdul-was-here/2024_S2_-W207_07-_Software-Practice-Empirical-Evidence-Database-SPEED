@@ -1,50 +1,51 @@
-import { useState } from 'react';
-import styles from './css/Search.module.css'; 
-import Layout from '../components/Layout';
+import { useState } from 'react'; // Import React's useState hook for state management
+import styles from './css/Search.module.css'; // Import CSS module for styling
+import Layout from '../components/Layout'; // Import the Layout component for consistent page structure
 
 export default function Search() {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [query, setQuery] = useState(''); // State to store the search query
+  const [results, setResults] = useState([]); // State to store search results
 
+  // Handle search form submission
   const handleSearch = async (e) => {
-    e.preventDefault();
-    const res = await fetch(`/api/articles/search?q=${query}`);
+    e.preventDefault(); // Prevent default form submission behavior
+    const res = await fetch(`/api/articles/search?q=${query}`); // Fetch search results from the API
     if (res.ok) {
-      const data = await res.json();
-      setResults(data);
+      const data = await res.json(); // Parse the response JSON
+      setResults(data); // Update the state with the search results
     } else {
-      alert('Failed to search articles');
+      alert('Failed to search articles'); // Alert user on failure
     }
   };
 
   return (
-    <Layout>
-    <div className={styles.container}>
-      <h1>Search Articles</h1>
-      <form onSubmit={handleSearch} className={styles.form}>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Enter search keyword"
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button}>Search</button>
-      </form>
+    <Layout> {/* Wrap content with the Layout component */}
+      <div className={styles.container}> {/* Container for the search form and results */}
+        <h1>Search Articles</h1> {/* Page title */}
+        <form onSubmit={handleSearch} className={styles.form}> {/* Search form */}
+          <input
+            type="text" // Input type for search keyword
+            value={query} // Bind query state to input
+            onChange={(e) => setQuery(e.target.value)} // Update query state on input change
+            placeholder="Enter search keyword" // Placeholder text
+            className={styles.input} // CSS class for styling
+          />
+          <button type="submit" className={styles.button}>Search</button> {/* Submit button */}
+        </form>
 
-      <ul className={styles.results}>
-        {results.length > 0 ? (
-          results.map(article => (
-            <li key={article._id} className={styles.resultItem}>
-              <h2>{article.title}</h2>
-              <p><strong>DOI:</strong> {article.doi ? <a href={article.doi} target="_blank" rel="noopener noreferrer">{article.doi}</a> : 'No DOI available'}</p>
-            </li>
-          ))
-        ) : (
-          <p className={styles.noResults}>No results found</p>
-        )}
-      </ul>
-    </div>
+        <ul className={styles.results}> {/* List for displaying search results */}
+          {results.length > 0 ? ( // Check if there are any results
+            results.map(article => ( // Map through search results to create list items
+              <li key={article._id} className={styles.resultItem}> {/* Unique key for each list item */}
+                <h2>{article.title}</h2> {/* Article title */}
+                <p><strong>DOI:</strong> {article.doi ? <a href={article.doi} target="_blank" rel="noopener noreferrer">{article.doi}</a> : 'No DOI available'}</p> {/* Display DOI with link if available */}
+              </li>
+            ))
+          ) : (
+            <p className={styles.noResults}>No results found</p> // Message displayed if there are no results
+          )}
+        </ul>
+      </div>
     </Layout>
   );
 }
