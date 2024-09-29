@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styles from './css/Login.module.css'; 
-import Layout from '../components/Layout';
+import styles from './css/Login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  // 如果用户已登录，重定向到首页
+  // If user is logged in, redirect to home
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      router.replace('/');  // 避免登录用户访问登录页
+      router.replace('/'); // Redirect logged-in users
     }
   }, [router]);
 
-  // 登录处理函数
+  // Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -37,17 +36,17 @@ export default function Login() {
       const data = await res.json();
       localStorage.setItem('token', data.token);
 
-      // 手动解析 JWT
+      // Manually decode JWT
       const decodedToken = decodeToken(data.token);
       const userRole = decodedToken.role;
 
-      // 根据用户角色重定向到不同的页面
+      // Redirect based on user role
       if (userRole === 'Moderator') {
         router.push('/moderation');
       } else if (userRole === 'Analyst') {
         router.push('/analysis');
       } else {
-        router.push('/'); // 如果角色不是 Moderator 或 Analyst，跳转到首页
+        router.push('/'); // Redirect to home for other roles
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -55,7 +54,7 @@ export default function Login() {
     }
   };
 
-  // 手动解析 JWT 的方法
+  // Manually decode JWT
   const decodeToken = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -71,35 +70,33 @@ export default function Login() {
   };
 
   return (
-    <Layout hideMenu={true}>
-      <div className={styles.container}>
-        {/* 添加标题 */}
-        <h1 className={styles.title}>Welcome to SPEED Login</h1>
-        <form onSubmit={handleLogin} className={styles.form}>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-            className={styles.input}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            className={styles.input}
-          />
-          <button type="submit" className={styles.button}>Login</button>
-        </form>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Welcome to SPEED Login</h1>
+      <form onSubmit={handleLogin} className={styles.form}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+          className={styles.input}
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+          className={styles.input}
+        />
+        <button type="submit" className={styles.button}>Login</button>
+      </form>
 
-        <p className={styles.text}>
-          Don't have an account? 
-          <Link href="/register" className={styles.link}>Register here</Link>
-        </p>
-      </div>
-    </Layout>
+      <p className={styles.text}>
+        Don&apos;t have an account? 
+        <Link href="/register" className={styles.link}>Register here</Link>
+      </p>
+    </div>
   );
 }
+

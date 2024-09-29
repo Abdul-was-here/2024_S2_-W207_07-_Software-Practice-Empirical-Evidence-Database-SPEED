@@ -70,4 +70,7 @@ export class ArticlesController {
   ) {
     return await this.articlesService.submitAnalysis(id, body.analysisResult);
   }
+
+
+  
 }

@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { isValidObjectId } from 'mongoose';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class ArticlesService {
@@ -32,7 +34,7 @@ export class ArticlesService {
   }
 
   async searchArticles(query: string): Promise<Article[]> {
-    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec();  
+    return this.articleModel.find({ title: new RegExp(query, 'i') }).exec();
   }
 
   // 审核文章 (通过则进入 `pending_analysis` 状态)

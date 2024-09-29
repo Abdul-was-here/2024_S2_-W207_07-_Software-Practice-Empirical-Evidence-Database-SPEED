@@ -1,58 +1,69 @@
 .container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-  }
-  
-  .login {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logoutButton, .loginButton {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: #0070f3;
-    color: white;
-    font-size: 16px;
-  }
-  
-  .logoutButton:hover, .loginButton:hover {
-    background-color: #005bb5;
-  }
-  
-  .nav ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-  }
-  
-  .nav li {
-    margin: 0 20px;
-  }
-  
-  .nav a {
-    text-decoration: none;
-    font-size: 18px;
-    color: #0070f3;
-  }
-  
-  .nav a:hover {
-    text-decoration: underline;
-  }
-  
-  .main {
-    margin-top: 20px;
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.articleList {
+  margin-top: 20px;
+}
+
+.articleItem {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.articleItem p {
+  margin: 5px 0;
+}
+
+.articleItem a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.articleItem a:hover {
+  text-decoration: underline;
+}
+
+.buttonContainer {
+  margin-top: 15px;
+}
+
+.articleButton {
+  margin-right: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.articleButton:hover {
+  background-color: #0056b3;
+}
+
+.bookmarksLink {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.bookmarksLink a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.bookmarksLink a:hover {
+  text-decoration: underline;
+}
