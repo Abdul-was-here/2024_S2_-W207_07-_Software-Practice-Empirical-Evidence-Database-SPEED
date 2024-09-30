@@ -18,8 +18,8 @@
     "next": "^14.2.13",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.24.7",
