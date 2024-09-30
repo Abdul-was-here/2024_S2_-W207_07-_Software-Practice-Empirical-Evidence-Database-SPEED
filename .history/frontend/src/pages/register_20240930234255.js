@@ -41,36 +41,38 @@ export default function Register() {
   };
 
   return (
-    <div className={styles.container}> {/* Container for registration form */}
-      <h1>Register</h1> {/* Page title */}
-      <form onSubmit={handleRegister} className={styles.form}> {/* Registration form */}
-        <input
-          type="email" // Input for email
-          value={email} // Bind email state to input
-          onChange={(e) => setEmail(e.target.value)} // Update email state on input change
-          placeholder="Email" // Placeholder text
-          required // Input is required
-          className={styles.input} // CSS class for styling
-        />
-        <input
-          type="password" // Input for password
-          value={password} // Bind password state to input
-          onChange={(e) => setPassword(e.target.value)} // Update password state on input change
-          placeholder="Password" // Placeholder text
-          required // Input is required
-          className={styles.input} // CSS class for styling
-        />
-        <select
-          value={role} // Bind role state to select
-          onChange={(e) => setRole(e.target.value)} // Update role state on selection change
-          className={styles.input} // CSS class for styling
-        >
-          <option value="Submitter">Submitter</option> {/* Role option */}
-          <option value="Moderator">Moderator</option> {/* Role option */}
-          <option value="Analyst">Analyst</option> {/* Role option */}
-        </select>
-        <button type="submit" className={styles.button}>Register</button> {/* Submit button */}
-      </form>
-    </div>
+    <Layout> {/* Wrap content with the Layout component */}
+      <div className={styles.container}> {/* Container for registration form */}
+        <h1>Register</h1> {/* Page title */}
+        <form onSubmit={handleRegister} className={styles.form}> {/* Registration form */}
+          <input
+            type="email" // Input for email
+            value={email} // Bind email state to input
+            onChange={(e) => setEmail(e.target.value)} // Update email state on input change
+            placeholder="Email" // Placeholder text
+            required // Input is required
+            className={styles.input} // CSS class for styling
+          />
+          <input
+            type="password" // Input for password
+            value={password} // Bind password state to input
+            onChange={(e) => setPassword(e.target.value)} // Update password state on input change
+            placeholder="Password" // Placeholder text
+            required // Input is required
+            className={styles.input} // CSS class for styling
+          />
+          <select
+            value={role} // Bind role state to select
+            onChange={(e) => setRole(e.target.value)} // Update role state on selection change
+            className={styles.input} // CSS class for styling
+          >
+            <option value="Submitter">Submitter</option> {/* Role option */}
+            <option value="Moderator">Moderator</option> {/* Role option */}
+            <option value="Analyst">Analyst</option> {/* Role option */}
+          </select>
+          <button type="submit" className={styles.button}>Register</button> {/* Submit button */}
+        </form>
+      </div>
+    </Layout>
   );
 }
