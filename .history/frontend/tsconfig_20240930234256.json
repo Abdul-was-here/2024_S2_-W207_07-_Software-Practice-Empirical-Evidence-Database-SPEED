@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/pages/submit.js"
+    "components/submit.js"
   ],
   "exclude": [
     "node_modules"
