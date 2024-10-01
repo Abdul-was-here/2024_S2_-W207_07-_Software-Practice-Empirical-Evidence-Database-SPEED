@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link'; // Import Link for navigation
@@ -7,12 +8,9 @@ import styles from './css/Home.module.css'; // Import styles for your component
 export default function Home() {
   const [userRole, setUserRole] = useState(null); // State to hold user role
   const [articles, setArticles] = useState([]); // State to hold articles
-  const [isClient, setIsClient] = useState(false); // State to check if running on the client side
   const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true); // Mark that the component is running on the client side
-
     const token = localStorage.getItem('token'); // Get token from local storage
     if (token) {
       fetch('/api/users/me', {
@@ -83,11 +81,6 @@ export default function Home() {
     document.body.removeChild(link); // Clean up
   };
 
-  // Prevent rendering until the component is on the client side
-  if (!isClient) {
-    return null;
-  }
-
   return (
     <Layout>
       <div className={styles.container}>
@@ -150,3 +143,4 @@ export default function Home() {
     </Layout>
   );
 }
+

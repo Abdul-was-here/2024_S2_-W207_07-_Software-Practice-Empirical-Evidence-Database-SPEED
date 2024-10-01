@@ -7,11 +7,9 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false); // Check if running on client
 
+  // If user is logged in, redirect to home
   useEffect(() => {
-    // Ensure component is rendered only on the client
-    setIsClient(true);
     const token = localStorage.getItem('token');
     if (token) {
       router.replace('/'); // Redirect logged-in users
@@ -71,11 +69,6 @@ export default function Login() {
     return JSON.parse(jsonPayload);
   };
 
-  // Render only on client side
-  if (!isClient) {
-    return null; // Don't render anything on server side
-  }
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Welcome to SPEED Login</h1>
@@ -106,3 +99,4 @@ export default function Login() {
     </div>
   );
 }
+

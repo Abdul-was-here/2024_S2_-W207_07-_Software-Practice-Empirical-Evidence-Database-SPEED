@@ -15,10 +15,9 @@ export default function Submit() {
   });
 
   const router = useRouter(); // Get the router object for navigation
-  const [isClient, setIsClient] = useState(false); // State to check if the component is rendering on the client side
 
+  // Check for token and verify if the user is logged in
   useEffect(() => {
-    setIsClient(true); // Set isClient to true after component mounts
     const token = localStorage.getItem('token'); // Retrieve the token from local storage
     if (!token) {
       // If no token is found, redirect to the login page
@@ -73,11 +72,6 @@ export default function Submit() {
       [name]: value, // Update the specific field being changed
     });
   };
-
-  // Ensure the component only renders on the client side
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Layout> {/* Wrap content with the Layout component */}

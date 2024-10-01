@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import styles from './css/Articles.module.css'; // Import CSS module for styling
 import Layout from './Layout'; // Import the Layout component for consistent page structure
@@ -5,15 +6,13 @@ import Layout from './Layout'; // Import the Layout component for consistent pag
 export default function Articles() {
   const [articles, setArticles] = useState([]); // State to store articles
   const [sortOption, setSortOption] = useState('author'); // Default sorting by author
-  const [isClient, setIsClient] = useState(false); // State to track if rendering is happening on the client side
 
   useEffect(() => {
-    setIsClient(true); // Ensure the component only renders on the client side
     // Fetch articles from the API when the component mounts
     fetch('/api/articles')
       .then(res => res.json()) // Convert the response to JSON
       .then(data => setArticles(data)); // Update state with the fetched articles
-  }, []);
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   // Format the date to a more readable format
   const formatDate = (dateString) => {
@@ -39,11 +38,6 @@ export default function Articles() {
   const handleSortChange = (e) => {
     setSortOption(e.target.value); // Update the sorting option based on user selection
   };
-
-  // Ensure the component only renders on the client side
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Layout> {/* Wrap content with the Layout component */}

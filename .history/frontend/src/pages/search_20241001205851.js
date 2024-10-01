@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import styles from './css/Search.module.css'; // Import CSS module for styling
 import Layout from './Layout'; // Import the Layout component for consistent page structure
 
 export default function Search() {
   const [query, setQuery] = useState(''); // State to store the search query
   const [results, setResults] = useState([]); // State to store search results
-  const [isClient, setIsClient] = useState(false); // State to check if rendering is happening on the client side
-
-  useEffect(() => {
-    setIsClient(true); // Ensure the component only renders on the client side
-  }, []);
 
   // Handle search form submission
   const handleSearch = async (e) => {
@@ -22,11 +17,6 @@ export default function Search() {
       alert('Failed to search articles'); // Alert user on failure
     }
   };
-
-  // Ensure the component only renders on the client side
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Layout> {/* Wrap content with the Layout component */}

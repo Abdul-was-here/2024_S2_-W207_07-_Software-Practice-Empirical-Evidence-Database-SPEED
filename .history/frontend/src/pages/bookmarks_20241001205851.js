@@ -1,20 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout'; // Import the Layout component for consistent page structure
 import styles from './css/Bookmarks.module.css'; // Import CSS module for styling
 
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]); // State to store bookmarked articles
-  const [isClient, setIsClient] = useState(false); // State to check if the component is running on the client side
 
   useEffect(() => {
-    setIsClient(true); // Ensure the component is only rendered on the client side
-
     // Retrieve bookmarks from local storage when the component mounts
-    if (typeof window !== 'undefined') { // Check if `window` is defined
-      const storedBookmarks = localStorage.getItem('bookmarks');
-      if (storedBookmarks) {
-        setBookmarks(JSON.parse(storedBookmarks)); // Parse and set bookmarks if they exist
-      }
+    const storedBookmarks = localStorage.getItem('bookmarks');
+    if (storedBookmarks) {
+      setBookmarks(JSON.parse(storedBookmarks)); // Parse and set bookmarks if they exist
     }
   }, []); // Empty dependency array means this runs once when the component mounts
 
@@ -26,19 +22,12 @@ export default function Bookmarks() {
 
   // Remove a bookmark by article ID
   const removeBookmark = (articleId) => {
-    if (window.confirm('Are you sure you want to remove this bookmark?')) {
-      // Filter out the bookmark to be removed
-      const updatedBookmarks = bookmarks.filter((article) => article._id !== articleId);
-      setBookmarks(updatedBookmarks); // Update state with the filtered bookmarks
-      // Update local storage with the new bookmarks list
-      localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-    }
+    // Filter out the bookmark to be removed
+    const updatedBookmarks = bookmarks.filter((article) => article._id !== articleId);
+    setBookmarks(updatedBookmarks); // Update state with the filtered bookmarks
+    // Update local storage with the new bookmarks list
+    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
   };
-
-  // Ensure the component only renders on the client side
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <Layout> {/* Wrap content with the Layout component */}

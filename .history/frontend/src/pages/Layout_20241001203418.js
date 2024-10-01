@@ -9,20 +9,13 @@ export default function Layout({ children, hideMenu }) {
   const router = useRouter(); // Get the router object for navigation
 
   useEffect(() => {
-    if (typeof window !== 'undefined') { // Ensure code runs only on client side
-      const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
-      if (token) {
-        try {
-          const decodedToken = decodeToken(token); // Decode the token to get user information
-          setIsLoggedIn(true); // Set login status to true
-          setUserRole(decodedToken.role); // Set user role from the decoded token
-        } catch (error) {
-          console.error('Invalid token:', error); // Log token error
-          handleLogout(); // Logout if the token is invalid or decoding fails
-        }
-      }
+    const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
+    if (token && !isLoggedIn) { // Only decode the token if the user is not logged in
+      const decodedToken = decodeToken(token); // Decode the token to get user information
+      setIsLoggedIn(true); // Set login status to true
+      setUserRole(decodedToken.role); // Set user role from the decoded token
     }
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, [isLoggedIn]); // Dependency on isLoggedIn to avoid repeated decoding
 
   // Manually decode JWT token
   const decodeToken = (token) => {
@@ -36,9 +29,7 @@ export default function Layout({ children, hideMenu }) {
 
   // Handle user logout
   const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token'); // Remove the token from local storage
-    }
+    localStorage.removeItem('token'); // Remove the token from local storage
     setIsLoggedIn(false); // Set login status to false
     setUserRole(null); // Clear user role
     router.push('/login'); // Redirect to the login page
@@ -52,12 +43,6 @@ export default function Layout({ children, hideMenu }) {
             <ul className={styles.navList}> {/* Navigation list */}
               <li>
                 <Link href="/">Home</Link> {/* Home link */}
-              </li>
-              <li>
-                <Link href="/articles">Articles</Link> {/* Articles link */}
-              </li>
-              <li>
-                <Link href="/search">Search</Link> {/* Search link */}
               </li>
               <li>
                 <Link href="/submit">Submit Article</Link> {/* Submit article link */}
