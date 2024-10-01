@@ -45,12 +45,6 @@ export default function Layout({ children, hideMenu }) {
                 <Link href="/">Home</Link> {/* Home link */}
               </li>
               <li>
-                <Link href="/articles">Articles</Link> {/* Articles link */}
-              </li>
-              <li>
-                <Link href="/search">Search</Link> {/* Search link */}
-              </li>
-              <li>
                 <Link href="/submit">Submit Article</Link> {/* Submit article link */}
               </li>
               {isLoggedIn ? ( // Check if the user is logged in
