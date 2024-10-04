@@ -13,7 +13,6 @@ export class UsersService {
 
   // Validate if user exists and password is correct
   async validateUser(email: string, password: string) {
-    console.log(email, password)
     const user = await this.userModel.findOne({ email }).exec(); // Find user by email
     if (user && await bcrypt.compare(password, user.password)) { // Check if user exists and password matches
       return user; // Return the user if validation is successful
